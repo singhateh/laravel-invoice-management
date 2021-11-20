@@ -1,29 +1,24 @@
 /*******************************************************************************
-* Simplified PHP Invoice System                                                *
-*                                                                              *
-* Version: 1.1.1	                                                               *
-* Author:  James Brandon                                    				   *
+*  LARAVEL PHP FRAMEWORK  JSS Invoice Management System                                                *
+*                                                                              *                                                               *
+* Author:  Alagie Singhateh                                   				   *
+* Email:  3939919@gmail.com                                    				   *
+* Website:  https:://www.jambasangsang.com                                    				   *
 *******************************************************************************/
 
-$(document).ready(function() {
+$(document).ready(function () {
 
-	// Invoice Type
-	$('#invoice_type').change(function() {
-		var invoiceType = $("#invoice_type option:selected").text();
-		$(".invoice_type").text(invoiceType);
-	});
+    // Invoice Type
+    $('#invoice_types').change(function () {
+        var invoiceType = $("#invoice_types option:selected").text();
+        $(".invoice_type").text(invoiceType);
+    });
 
-	// Load dataTables
-	$("#data-table").dataTable();
+    // Load dataTables
+    $("#data-table").dataTable();
 
-	// add product
-	$("#action_add_product").click(function(e) {
-		e.preventDefault();
-	    actionAddProduct();
-	});
-
-	// password strength
-	var options = {
+    // password strength
+    var options = {
         onLoad: function () {
             $('#messages').text('Start typing password');
         },
@@ -33,229 +28,122 @@ $(document).ready(function() {
     };
     $('#password').pwstrength(options);
 
-	// add user
-	$("#action_add_user").click(function(e) {
-		e.preventDefault();
-	    actionAddUser();
-	});
 
-	// update customer
-	$(document).on('click', "#action_update_user", function(e) {
-		e.preventDefault();
-		updateUser();
-	});
+    $(document).on('click', ".item-select", function (e) {
 
-	// delete user
-	$(document).on('click', ".delete-user", function(e) {
-        e.preventDefault();
+        e.preventDefault;
 
-        var userId = 'action=delete_user&delete='+ $(this).attr('data-user-id'); //build a post data structure
-        var user = $(this);
-
-	    $('#delete_user').modal({ backdrop: 'static', keyboard: false }).one('click', '#delete', function() {
-			deleteUser(userId);
-			$(user).closest('tr').remove();
-        });
-   	});
-
-   	// delete customer
-	$(document).on('click', ".delete-customer", function(e) {
-        e.preventDefault();
-
-        var userId = 'action=delete_customer&delete='+ $(this).attr('data-customer-id'); //build a post data structure
-        var user = $(this);
-
-	    $('#delete_customer').modal({ backdrop: 'static', keyboard: false }).one('click', '#delete', function() {
-			deleteCustomer(userId);
-			$(user).closest('tr').remove();
-        });
-   	});
-
-	// update customer
-	$(document).on('click', "#action_update_customer", function(e) {
-		e.preventDefault();
-		updateCustomer();
-	});
-
-	// update product
-	$(document).on('click', "#action_update_product", function(e) {
-		e.preventDefault();
-		updateProduct();
-	});
-
-	// login form
-	$(document).bind('keypress', function(e) {
-		e.preventDefault;
-
-        if(e.keyCode==13){
-            $('#btn-login').trigger('click');
-        }
-    });
-
-	$(document).on('click','#btn-login', function(e){
-		e.preventDefault;
-		actionLogin();
-	});
-
-	// download CSV
-	$(document).on('click', ".download-csv", function(e) {
-		e.preventDefault;
-
-		var action = 'action=download_csv'; //build a post data structure
-        downloadCSV(action);
-
-	});
-
-	// email invoice
-	$(document).on('click', ".email-invoice", function(e) {
-        e.preventDefault();
-
-        var invoiceId = 'action=email_invoice&id='+$(this).attr('data-invoice-id')+'&email='+$(this).attr('data-email')+'&invoice_type='+$(this).attr('data-invoice-type')+'&custom_email='+$(this).attr('data-custom-email'); //build a post data structure
-		emailInvoice(invoiceId);
-   	});
-
-	// delete invoice
-	$(document).on('click', ".delete-invoice", function(e) {
-        e.preventDefault();
-
-        var invoiceId = 'action=delete_invoice&delete='+ $(this).attr('data-invoice-id'); //build a post data structure
-        var invoice = $(this);
-
-	    $('#delete_invoice').modal({ backdrop: 'static', keyboard: false }).one('click', '#delete', function() {
-			deleteInvoice(invoiceId);
-			$(invoice).closest('tr').remove();
-        });
-   	});
-
-	// delete product
-	$(document).on('click', ".delete-product", function(e) {
-        e.preventDefault();
-
-        var productId = 'action=delete_product&delete='+ $(this).attr('data-product-id'); //build a post data structure
         var product = $(this);
 
-	    $('#confirm').modal({ backdrop: 'static', keyboard: false }).one('click', '#delete', function() {
-			deleteProduct(productId);
-			$(product).closest('tr').remove();
+        $('#add_product').modal({ backdrop: 'static', keyboard: false }).one('click', '#selected', function (e) {
+
+            var itemText = $('#add_product').find("option:selected").text();
+            var itemValue = $('#add_product').find("option:selected").val();
+            var itemId = $('#add_product').find("option:selected").attr('data-product-id');
+
+            $(product).closest('tr').find('.invoice_product').val(itemText);
+            $(product).closest('tr').find('.invoice_product_price').val(itemValue);
+            $(product).closest('tr').find('.invoice_product_id').val(itemId);
+
+            updateTotals('.calculate');
+            calculateTotal();
+
         });
-   	});
 
-	// create customer
-	$("#action_create_customer").click(function(e) {
-		e.preventDefault();
-	    actionCreateCustomer();
-	});
+        return false;
 
-	$(document).on('click', ".item-select", function(e) {
+    });
 
-   		e.preventDefault;
+    $(document).on('click', ".create-new-customer", function (e) {
+        e.preventDefault;
+        $('#add_new_customer').modal({ backdrop: 'static', keyboard: false });
+        return false;
+    });
 
-   		var product = $(this);
+    $(document).on('click', ".select-existing-customer", function (e) {
 
-   		$('#insert').modal({ backdrop: 'static', keyboard: false }).one('click', '#selected', function(e) {
+        e.preventDefault;
 
-		    var itemText = $('#insert').find("option:selected").text();
-		    var itemValue = $('#insert').find("option:selected").val();
+        var customer = $(this);
 
-		    $(product).closest('tr').find('.invoice_product').val(itemText);
-		    $(product).closest('tr').find('.invoice_product_price').val(itemValue);
+        $('#add_customer').modal({ backdrop: 'static', keyboard: false });
 
-		    updateTotals('.calculate');
-        	calculateTotal();
+        return false;
 
-   		});
+    });
 
-   		return false;
+    $(document).on('click', ".customer-select", function (e) {
 
-   	});
+        $('.customers-templete').css('display', 'block');
+        var customer_id = $(this).attr('data-customer-id');
+        var customer_name = $(this).attr('data-customer-name');
+        var customer_email = $(this).attr('data-customer-email');
+        var customer_phone = $(this).attr('data-customer-phone');
 
-   	$(document).on('click', ".select-customer", function(e) {
+        var customer_address_1 = $(this).attr('data-customer-address-1');
+        var customer_address_2 = $(this).attr('data-customer-address-2');
+        var customer_city = $(this).attr('data-customer-city');
+        var customer_country = $(this).attr('data-customer-country');
+        var customer_postcode = $(this).attr('data-customer-postcode');
 
-   		e.preventDefault;
+        var customer_name_ship = $(this).attr('data-customer-name-ship');
+        var customer_address_1_ship = $(this).attr('data-customer-address-1-ship');
+        var customer_address_2_ship = $(this).attr('data-customer-address-2-ship');
+        var customer_city_ship = $(this).attr('data-customer-city-ship');
+        var customer_country_ship = $(this).attr('data-customer-country-ship');
+        var customer_postcode_ship = $(this).attr('data-customer-postcode-ship');
 
-   		var customer = $(this);
+        $('#customer_id').val(customer_id);
+        $('#customer_name').val(customer_name);
+        $('#customer_email').val(customer_email);
+        $('#customer_phone').val(customer_phone);
 
-   		$('#insert_customer').modal({ backdrop: 'static', keyboard: false });
-
-   		return false;
-
-   	});
-
-   	$(document).on('click', ".customer-select", function(e) {
-
-		    var customer_name = $(this).attr('data-customer-name');
-		    var customer_email = $(this).attr('data-customer-email');
-		    var customer_phone = $(this).attr('data-customer-phone');
-
-		    var customer_address_1 = $(this).attr('data-customer-address-1');
-		    var customer_address_2 = $(this).attr('data-customer-address-2');
-		    var customer_town = $(this).attr('data-customer-town');
-		    var customer_county = $(this).attr('data-customer-county');
-		    var customer_postcode = $(this).attr('data-customer-postcode');
-
-		    var customer_name_ship = $(this).attr('data-customer-name-ship');
-		    var customer_address_1_ship = $(this).attr('data-customer-address-1-ship');
-		    var customer_address_2_ship = $(this).attr('data-customer-address-2-ship');
-		    var customer_town_ship = $(this).attr('data-customer-town-ship');
-		    var customer_county_ship = $(this).attr('data-customer-county-ship');
-		    var customer_postcode_ship = $(this).attr('data-customer-postcode-ship');
-
-		    $('#customer_name').val(customer_name);
-		    $('#customer_email').val(customer_email);
-		    $('#customer_phone').val(customer_phone);
-
-		    $('#customer_address_1').val(customer_address_1);
-		    $('#customer_address_2').val(customer_address_2);
-		    $('#customer_town').val(customer_town);
-		    $('#customer_county').val(customer_county);
-		    $('#customer_postcode').val(customer_postcode);
+        $('#customer_address_1').val(customer_address_1);
+        $('#customer_address_2').val(customer_address_2);
+        $('#customer_city').val(customer_city);
+        $('#customer_country').val(customer_country);
+        $('#customer_post_code').val(customer_postcode);
 
 
-		    $('#customer_name_ship').val(customer_name_ship);
-		    $('#customer_address_1_ship').val(customer_address_1_ship);
-		    $('#customer_address_2_ship').val(customer_address_2_ship);
-		    $('#customer_town_ship').val(customer_town_ship);
-		    $('#customer_county_ship').val(customer_county_ship);
-		    $('#customer_postcode_ship').val(customer_postcode_ship);
+        $('#customer_ship_name').val(customer_name_ship);
+        $('#customer_ship_address_1').val(customer_address_1_ship);
+        $('#customer_ship_address_2').val(customer_address_2_ship);
+        $('#customer_ship_city').val(customer_city_ship);
+        $('#customer_ship_country').val(customer_country_ship);
+        $('#customer_ship_post_code').val(customer_postcode_ship);
 
-		    $('#insert_customer').modal('hide');
+        $('#add_customer').modal('hide');
 
-	});
+    });
 
-	// create invoice
-	$("#action_create_invoice").click(function(e) {
-		e.preventDefault();
-	    actionCreateInvoice();
-	});
+    // update invoice
+    $(document).on('click', "#action_edit_invoice", function (e) {
+        e.preventDefault();
+        updateInvoice();
+    });
 
-	// update invoice
-	$(document).on('click', "#action_edit_invoice", function(e) {
-		e.preventDefault();
-		updateInvoice();
-	});
+    // enable date pickers for due date and invoice date
+    var dateFormat = $(this).attr('data-vat-rate');
+    $('#invoice_date, #invoice_due_date').datetimepicker({
+        showClose: false,
+        format: 'YYYY-MM-DD HH:mm'
+    });
 
-	// enable date pickers for due date and invoice date
-	var dateFormat = $(this).attr('data-vat-rate');
-	$('#invoice_date, #invoice_due_date').datetimepicker({
-		showClose: false,
-		format: dateFormat
-	});
-
-	// copy customer details to shipping
+    // copy customer details to shipping
     $('input.copy-input').on("input", function () {
         $('input#' + this.id + "_ship").val($(this).val());
     });
 
     // remove product row
-    $('#invoice_table').on('click', ".delete-row", function(e) {
-    	e.preventDefault();
-       	$(this).closest('tr').remove();
+    $('#invoice_table').on('click', ".delete-row", function (e) {
+        e.preventDefault();
+        $(this).closest('tr').remove();
         calculateTotal();
     });
 
     // add new product row on invoice
     var cloned = $('#invoice_table tr:last').clone();
-    $(".add-row").click(function(e) {
+    $(".add-row").click(function (e) {
         e.preventDefault();
         cloned.clone().appendTo('#invoice_table');
     });
@@ -263,33 +151,33 @@ $(document).ready(function() {
     calculateTotal();
 
     $('#invoice_table').on('input', '.calculate', function () {
-	    updateTotals(this);
-	    calculateTotal();
-	});
-
-	$('#invoice_totals').on('input', '.calculate', function () {
-	    calculateTotal();
-	});
-
-	$('#invoice_product').on('input', '.calculate', function () {
-	    calculateTotal();
-	});
-
-	$('.remove_vat').on('change', function() {
+        updateTotals(this);
         calculateTotal();
     });
 
-	function updateTotals(elem) {
+    $('#invoice_totals').on('input', '.calculate', function () {
+        calculateTotal();
+    });
+
+    $('#invoice_product').on('input', '.calculate', function () {
+        calculateTotal();
+    });
+
+    $('.remove_vat').on('change', function () {
+        calculateTotal();
+    });
+
+    function updateTotals(elem) {
 
         var tr = $(elem).closest('tr'),
             quantity = $('[name="invoice_product_qty[]"]', tr).val(),
-	        price = $('[name="invoice_product_price[]"]', tr).val(),
+            price = $('[name="invoice_product_price[]"]', tr).val(),
             isPercent = $('[name="invoice_product_discount[]"]', tr).val().indexOf('%') > -1,
             percent = $.trim($('[name="invoice_product_discount[]"]', tr).val().replace('%', '')),
-	        subtotal = parseInt(quantity) * parseFloat(price);
+            subtotal = parseInt(quantity) * parseFloat(price);
 
-        if(percent && $.isNumeric(percent) && percent !== 0) {
-            if(isPercent){
+        if (percent && $.isNumeric(percent) && percent !== 0) {
+            if (isPercent) {
                 subtotal = subtotal - ((parseFloat(percent) / 100) * subtotal);
             } else {
                 subtotal = subtotal - parseFloat(percent);
@@ -298,533 +186,250 @@ $(document).ready(function() {
             $('[name="invoice_product_discount[]"]', tr).val('');
         }
 
-	    $('.calculate-sub', tr).val(subtotal.toFixed(2));
-	}
+        $('.calculate-sub', tr).val(subtotal.toFixed(2));
+    }
 
-	function calculateTotal() {
+    function calculateTotal() {
 
-	    var grandTotal = 0,
-	    	disc = 0,
-	    	c_ship = parseInt($('.calculate.shipping').val()) || 0;
+        var grandTotal = 0,
+            disc = 0,
+            c_ship = parseInt($('.calculate.shipping').val()) || 0;
 
-	    $('#invoice_table tbody tr').each(function() {
+        $('#invoice_table tbody tr').each(function () {
             var c_sbt = $('.calculate-sub', this).val(),
                 quantity = $('[name="invoice_product_qty[]"]', this).val(),
-	            price = $('[name="invoice_product_price[]"]', this).val() || 0,
+                price = $('[name="invoice_product_price[]"]', this).val() || 0,
                 subtotal = parseInt(quantity) * parseFloat(price);
 
             grandTotal += parseFloat(c_sbt);
             disc += subtotal - parseFloat(c_sbt);
-	    });
+        });
 
         // VAT, DISCOUNT, SHIPPING, TOTAL, SUBTOTAL:
-	    var subT = parseFloat(grandTotal),
-	    	finalTotal = parseFloat(grandTotal + c_ship),
-	    	vat = parseInt($('.invoice-vat').attr('data-vat-rate'));
+        var subT = parseFloat(grandTotal),
+            finalTotal = parseFloat(grandTotal + c_ship),
+            vat = parseInt($('.invoice-vat').attr('data-vat-rate'));
 
-	    $('.invoice-sub-total').text(subT.toFixed(2));
-	    $('#invoice_subtotal').val(subT.toFixed(2));
+        $('.invoice-sub-total').text(subT.toFixed(2));
+        $('#invoice_subtotal').val(subT.toFixed(2));
         $('.invoice-discount').text(disc.toFixed(2));
         $('#invoice_discount').val(disc.toFixed(2));
 
-        if($('.invoice-vat').attr('data-enable-vat') === '1') {
+        if ($('.invoice-vat').attr('data-enable-vat') === '1') {
 
-	        if($('.invoice-vat').attr('data-vat-method') === '1') {
-		        $('.invoice-vat').text(((vat / 100) * finalTotal).toFixed(2));
-		        $('#invoice_vat').val(((vat / 100) * finalTotal).toFixed(2));
-	            $('.invoice-total').text((finalTotal).toFixed(2));
-	            $('#invoice_total').val((finalTotal).toFixed(2));
-	        } else {
-	            $('.invoice-vat').text(((vat / 100) * finalTotal).toFixed(2));
-	            $('#invoice_vat').val(((vat / 100) * finalTotal).toFixed(2));
-		        $('.invoice-total').text((finalTotal + ((vat / 100) * finalTotal)).toFixed(2));
-		        $('#invoice_total').val((finalTotal + ((vat / 100) * finalTotal)).toFixed(2));
-	        }
-		} else {
-			$('.invoice-total').text((finalTotal).toFixed(2));
-			$('#invoice_total').val((finalTotal).toFixed(2));
-		}
-
-		// remove vat
-    	if($('input.remove_vat').is(':checked')) {
-	        $('.invoice-vat').text("0.00");
-	        $('#invoice_vat').val("0.00");
+            if ($('.invoice-vat').attr('data-vat-method') === '1') {
+                $('.invoice-vat').text(((vat / 100) * finalTotal).toFixed(2));
+                $('#invoice_vat').val(((vat / 100) * finalTotal).toFixed(2));
+                $('.invoice-total').text((finalTotal).toFixed(2));
+                $('#invoice_total').val((finalTotal).toFixed(2));
+            } else {
+                $('.invoice-vat').text(((vat / 100) * finalTotal).toFixed(2));
+                $('#invoice_vat').val(((vat / 100) * finalTotal).toFixed(2));
+                $('.invoice-total').text((finalTotal + ((vat / 100) * finalTotal)).toFixed(2));
+                $('#invoice_total').val((finalTotal + ((vat / 100) * finalTotal)).toFixed(2));
+            }
+        } else {
             $('.invoice-total').text((finalTotal).toFixed(2));
             $('#invoice_total').val((finalTotal).toFixed(2));
-	    }
+        }
 
-	}
+        // remove vat
+        if ($('input.remove_vat').is(':checked')) {
+            $('.invoice-vat').text("0.00");
+            $('#invoice_vat').val("0.00");
+            $('.invoice-total').text((finalTotal).toFixed(2));
+            $('#invoice_total').val((finalTotal).toFixed(2));
+        }
 
-	function actionAddUser() {
+    }
 
-		var errorCounter = validateForm();
+    // Form Validations
+    function validateForm() {
+        // error handling
+        var errorCounter = 0;
 
-		if (errorCounter > 0) {
-		    $("#response").removeClass("alert-success").addClass("alert-warning").fadeIn();
-		    $("#response .message").html("<strong>Error</strong>: It appear's you have forgotten to complete something!");
-		    $("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-		} else {
+        $(".required").each(function (i, obj) {
 
-			$(".required").parent().removeClass("has-error");
+            if ($(this).val() === '') {
+                $(this).parent().addClass("has-error");
+                errorCounter++;
+            } else {
+                $(this).parent().removeClass("has-error");
+            }
 
-			var $btn = $("#action_add_user").button("loading");
-            var url = $("#add_user").attr("action"); //get form action url
-            var request_method = $("#add_user").attr("method"); //get
 
-			$.ajax({
+        });
 
-				url: url,
-				type: request_method,
-				data: $("#add_user").serialize(),
-				dataType: 'json',
+        return errorCounter;
+    }
+
+    // Reset FlashMessage
+    $(document).on('click', ".fa-lg", function (event) {
+        $('#FlashMessage').html('');
+    })
+
+    $(document).on('submit', "#CurrentForm", function (event) {
+
+        event.preventDefault(); //prevent default action
+        var url = $(this).attr("action"); //get form action url
+        var request_method = $(this).attr("method"); //get form GET/POST method
+        var form_data = new FormData(this);
+
+        var errorCounter = validateForm();
+        var URL = $('#InvoiceIndex').attr('data-url');
+        if (errorCounter > 0) {
+            $('#FlashMessage').html('<div class="alert alert-danger text-white"><i class="fa fa-exclamation-circle fa-lg float-left " ></i>&nbsp;&nbsp;  ' + data.error + ' <i class="fa fa-times fa-lg" style="cursor:pointer"><i></div>').fadeIn('slow');
+            $("#response").removeClass("alert-success").addClass("alert-danger").fadeIn();
+            $("#response .message").html("<strong>Error</strong>: It appear's you have forgotten to complete something!");
+        } else {
+            $.ajax({
+                url: url,
+                type: request_method,
                 headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-				data: $("#add_user").serialize(),
-				dataType: 'json',
-				success: function(data){
-					$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-					$("#response").removeClass("alert-warning").addClass("alert-success").fadeIn();
-					$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-					$btn.button("reset");
-				},
-				error: function(data){
-					$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-					$("#response").removeClass("alert-success").addClass("alert-warning").fadeIn();
-					$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-					$btn.button("reset");
-				}
-
-			});
-		}
-
-	}
-
-	function actionAddProduct() {
-
-		var errorCounter = validateForm();
-
-		if (errorCounter > 0) {
-		    $("#response").removeClass("alert-success").addClass("alert-warning").fadeIn();
-		    $("#response .message").html("<strong>Error</strong>: It appear's you have forgotten to complete something!");
-		    $("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-		} else {
-
-			$(".required").parent().removeClass("has-error");
-
-			var $btn = $("#action_add_product").button("loading");
-            var url = $("#add_product").attr("action"); //get form action url
-            var request_method = $("#add_product").attr("method"); //get
-
-			$.ajax({
-
-				url: url,
-				type: request_method,
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-				data: $("#add_product").serialize(),
-				dataType: 'json',
-				success: function(data){
-					$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-					$("#response").removeClass("alert-warning").addClass("alert-success").fadeIn();
-					$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-					$btn.button("reset");
-				},
-				error: function(data){
-					$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-					$("#response").removeClass("alert-success").addClass("alert-warning").fadeIn();
-					$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-					$btn.button("reset");
-				}
-
-			});
-		}
-
-	}
-
-	function actionCreateCustomer(){
-
-		var errorCounter = validateForm();
-
-		if (errorCounter > 0) {
-		    $("#response").removeClass("alert-success").addClass("alert-warning").fadeIn();
-		    $("#response .message").html("<strong>Error</strong>: It appear's you have forgotten to complete something!");
-		    $("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-		} else {
-
-			var $btn = $("#action_create_customer").button("loading");
-            var url = $("#create_customer").attr("action"); //get form action url
-            var request_method = $("#create_customer").attr("method"); //get
-
-
-			$(".required").parent().removeClass("has-error");
-
-			$.ajax({
-
-				url: url,
-				type: request_method,
-				data: $("#create_customer").serialize(),
-				dataType: 'json',
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-				success: function(data){
-					$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-					$("#response").removeClass("alert-warning").addClass("alert-success").fadeIn();
-					$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-					$("#create_customer").before().html("<a href='/customers/create' class='btn btn-primary'>Add New Customer</a>");
-					$("#create_cuatomer").remove();
-					$btn.button("reset");
-				},
-				error: function(data){
-					$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-					$("#response").removeClass("alert-success").addClass("alert-warning").fadeIn();
-					$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-					$btn.button("reset");
-				}
-
-			});
-		}
-
-	}
-
-	function actionCreateInvoice(){
-
-		var errorCounter = validateForm();
-
-		if (errorCounter > 0) {
-		    $("#response").removeClass("alert-success").addClass("alert-warning").fadeIn();
-		    $("#response .message").html("<strong>Error</strong>: It appear's you have forgotten to complete something!");
-		    $("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-		} else {
-
-			var $btn = $("#action_create_invoice").button("loading");
-
-			$(".required").parent().removeClass("has-error");
-			$("#create_invoice").find(':input:disabled').removeAttr('disabled');
-
-			$.ajax({
-
-				url: 'response.php',
-				type: 'POST',
-				data: $("#create_invoice").serialize(),
-				dataType: 'json',
-				success: function(data){
-					$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-					$("#response").removeClass("alert-warning").addClass("alert-success").fadeIn();
-					$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-					$("#create_invoice").before().html("<a href='../invoice-add.php' class='btn btn-primary'>Create new invoice</a>");
-					$("#create_invoice").remove();
-					$btn.button("reset");
-				},
-				error: function(data){
-					$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-					$("#response").removeClass("alert-success").addClass("alert-warning").fadeIn();
-					$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-					$btn.button("reset");
-				}
-
-			});
-		}
-
-	}
-
-   	function deleteProduct(productId) {
-
-        jQuery.ajax({
-
-        	url: 'response.php',
-            type: 'POST',
-            data: productId,
-            dataType: 'json',
-            success: function(data){
-				$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-				$("#response").removeClass("alert-warning").addClass("alert-success").fadeIn();
-				$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-				$btn.button("reset");
-			},
-			error: function(data){
-				$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-				$("#response").removeClass("alert-success").addClass("alert-warning").fadeIn();
-				$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-				$btn.button("reset");
-			}
-    	});
-
-   	}
-
-   	function deleteUser(userId) {
-
-        jQuery.ajax({
-
-        	url: 'response.php',
-            type: 'POST',
-            data: userId,
-            dataType: 'json',
-            success: function(data){
-				$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-				$("#response").removeClass("alert-warning").addClass("alert-success").fadeIn();
-				$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-				$btn.button("reset");
-			},
-			error: function(data){
-				$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-				$("#response").removeClass("alert-success").addClass("alert-warning").fadeIn();
-				$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-				$btn.button("reset");
-			}
-    	});
-
-   	}
-
-	function deleteCustomer(userId) {
-
-        jQuery.ajax({
-
-        	url: 'response.php',
-            type: 'POST',
-            data: userId,
-            dataType: 'json',
-            success: function(data){
-				$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-				$("#response").removeClass("alert-warning").addClass("alert-success").fadeIn();
-				$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-			},
-			error: function(data){
-				$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-				$("#response").removeClass("alert-success").addClass("alert-warning").fadeIn();
-				$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-			}
-    	});
-
-   	}
-
-   	function emailInvoice(invoiceId) {
-
-        jQuery.ajax({
-
-        	url: 'response.php',
-            type: 'POST',
-            data: invoiceId,
-            dataType: 'json',
-            success: function(data){
-				$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-				$("#response").removeClass("alert-warning").addClass("alert-success").fadeIn();
-				$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-			},
-			error: function(data){
-				$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-				$("#response").removeClass("alert-success").addClass("alert-warning").fadeIn();
-				$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-			}
-    	});
-
-   	}
-
-   	function deleteInvoice(invoiceId) {
-
-        jQuery.ajax({
-
-        	url: 'response.php',
-            type: 'POST',
-            data: invoiceId,
-            dataType: 'json',
-            success: function(data){
-				$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-				$("#response").removeClass("alert-warning").addClass("alert-success").fadeIn();
-				$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-				$btn.button("reset");
-			},
-			error: function(data){
-				$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-				$("#response").removeClass("alert-success").addClass("alert-warning").fadeIn();
-				$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-				$btn.button("reset");
-			}
-    	});
-
-   	}
-
-   	function updateProduct() {
-
-   		var $btn = $("#action_update_product").button("loading");
-
-        jQuery.ajax({
-
-        	url: 'response.php',
-            type: 'POST',
-            data: $("#update_product").serialize(),
-            dataType: 'json',
-            success: function(data){
-				$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-				$("#response").removeClass("alert-warning").addClass("alert-success").fadeIn();
-				$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-				$btn.button("reset");
-			},
-			error: function(data){
-				$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-				$("#response").removeClass("alert-success").addClass("alert-warning").fadeIn();
-				$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-				$btn.button("reset");
-			}
-    	});
-
-   	}
-
-   	function updateUser() {
-
-   		var $btn = $("#action_update_user").button("loading");
-
-        jQuery.ajax({
-
-        	url: 'response.php',
-            type: 'POST',
-            data: $("#update_user").serialize(),
-            dataType: 'json',
-            success: function(data){
-				$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-				$("#response").removeClass("alert-warning").addClass("alert-success").fadeIn();
-				$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-				$btn.button("reset");
-			},
-			error: function(data){
-				$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-				$("#response").removeClass("alert-success").addClass("alert-warning").fadeIn();
-				$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-				$btn.button("reset");
-			}
-    	});
-
-   	}
-
-   	function updateCustomer() {
-
-   		var $btn = $("#action_update_customer").button("loading");
-
-        jQuery.ajax({
-
-        	url: 'response.php',
-            type: 'POST',
-            data: $("#update_customer").serialize(),
-            dataType: 'json',
-            success: function(data){
-				$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-				$("#response").removeClass("alert-warning").addClass("alert-success").fadeIn();
-				$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-				$btn.button("reset");
-			},
-			error: function(data){
-				$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-				$("#response").removeClass("alert-success").addClass("alert-warning").fadeIn();
-				$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-				$btn.button("reset");
-			}
-    	});
-
-   	}
-
-   	function updateInvoice() {
-
-   		var $btn = $("#action_update_invoice").button("loading");
-   		$("#update_invoice").find(':input:disabled').removeAttr('disabled');
-
-        jQuery.ajax({
-
-        	url: 'response.php',
-            type: 'POST',
-            data: $("#update_invoice").serialize(),
-            dataType: 'json',
-            success: function(data){
-				$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-				$("#response").removeClass("alert-warning").addClass("alert-success").fadeIn();
-				$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-				$btn.button("reset");
-			},
-			error: function(data){
-				$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-				$("#response").removeClass("alert-success").addClass("alert-warning").fadeIn();
-				$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-				$btn.button("reset");
-			}
-    	});
-
-   	}
-
-   	function downloadCSV(action) {
-
-   		jQuery.ajax({
-
-   			url: 'response.php',
-   			type: 'POST',
-   			data: action,
-   			dataType: 'json',
-   			success: function(data){
-				$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-				$("#response").removeClass("alert-warning").addClass("alert-success").fadeIn();
-				$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-			},
-			error: function(data){
-				$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-				$("#response").removeClass("alert-success").addClass("alert-warning").fadeIn();
-				$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-			}
-   		});
-
-   	}
-
-   	// login function
-	function actionLogin() {
-
-		var errorCounter = validateForm();
-
-		if (errorCounter > 0) {
-
-		    $("#response").removeClass("alert-success").addClass("alert-warning").fadeIn();
-		    $("#response .message").html("<strong>Error</strong>: Missing something are we? check and try again!");
-		    $("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-
-		} else {
-
-			var $btn = $("#btn-login").button("loading");
-
-			jQuery.ajax({
-				url: 'response.php',
-				type: "POST",
-				data: $("#login_form").serialize(), // serializes the form's elements.
-				dataType: 'json',
-				success: function(data){
-					$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-					$("#response").removeClass("alert-warning").addClass("alert-success").fadeIn();
-					$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-					$btn.button("reset");
-
-					window.location = "dashboard.php";
-				},
-				error: function(data){
-					$("#response .message").html("<strong>" + data.status + "</strong>: " + data.message);
-					$("#response").removeClass("alert-success").addClass("alert-warning").fadeIn();
-					$("html, body").animate({ scrollTop: $('#response').offset().top }, 1000);
-					$btn.button("reset");
-				}
-
-			});
-
-		}
-
-	}
-
-   	function validateForm() {
-	    // error handling
-	    var errorCounter = 0;
-
-	    $(".required").each(function(i, obj) {
-
-	        if($(this).val() === ''){
-	            $(this).parent().addClass("has-error");
-	            errorCounter++;
-	        } else{
-	            $(this).parent().removeClass("has-error");
-	        }
-
-
-	    });
-
-	    return errorCounter;
-	}
+                data: form_data,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                success: function (data) {
+
+                    if (data.invoice_id != null) {
+                        location.replace(URL);
+                    } else {
+
+                        $('#FlashMessage').html('<div class="alert alert-success text-white"><i class="fa fa-exclamation-circle fa-lg float-left " ></i>&nbsp;&nbsp;  ' + data.success + ' <i class="fa fa-times-circle fa-lg float-right" style="cursor:pointer"><i></div>').fadeIn('slow');
+                        $("#CurrentForm")[0].reset();
+                        $('#openCreateModal').modal('hide');
+                        Index();
+
+
+                        // Redirect Route to Download or Preview Pdf Start Here
+                        var urls = $('#printUrl').attr('data-print-url');
+                        var newUrls = urls.replace('id', data.printInvoiceId);
+                        var downloadUrl = newUrls.replace('optionvalue', data.option);
+                        if (data.option == 'download') {
+                            location.replace(downloadUrl);
+                        } else if (data.option == 'preview') {
+                            window.open(downloadUrl, '_blank');
+                        }
+                        // Ends Herer
+
+                    }
+                },
+                error: function (data) {
+                    $('#FlashMessage').html('<div class="alert alert-danger text-white"><i class="fa fa-exclamation-circle fa-lg float-left " ></i>&nbsp;&nbsp;  ' + data.error + ' <i class="fa fa-times-circle fa-lg float-right" style="cursor:pointer"><i></div>').fadeIn('slow');
+                    $("#CurrentForm")[0].reset();
+                }
+            });
+        }
+
+
+
+    });
+
+    $(document).on('click', ".openCreateModal", function (e) {
+        e.preventDefault;
+        $('#openCreateModal').modal({ backdrop: 'static', keyboard: false });
+        return false;
+
+    });
+
+    // Showing Invoice Edit Modal
+    if ($('#editModalshow').val() == 'editModalshow') {
+        $('#openCreateModal').modal({ backdrop: 'static', keyboard: false });
+    }
 
 });
+
+
+function Index() {
+    var url = $('#ContainerTable').attr('data-url');
+    $.ajax({
+        url: url,
+        type: 'GET',
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        dataType: 'json',
+        success: function (data) {
+            $("#tableIndex").html(data.view);
+            window.history.pushState(null, null, url);
+        },
+
+    });
+}
+
+function singleDelete(id) {
+    var singleDelete_url = $('.singleDelete' + id).attr('data-singleDelete');
+    var password = $('#confirmPassword').val();
+
+    $.ajax({
+        url: singleDelete_url,
+        type: 'DELETE',
+        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+        data: { password: password },
+        dataType: 'json',
+        success: function (data) {
+            if (data.not_valid) {
+                Confirm('Confirm', 'Are you sure you want to delete this?', 'Yes', 'Cancel', id);
+                $('#errorMessage').text(data.not_valid);
+                return;
+            }
+            else if (data.success) {
+                $('#FlashMessage').html('<div class="alert alert-success text-white"><i class="fa fa-exclamation-circle fa-lg float-left " ></i>&nbsp;&nbsp;  ' + data.success + ' <i class="fa fa-times-circle fa-lg float-right" style="cursor:pointer"><i></div>').fadeIn('slow');
+                Index()
+            } else {
+                $('#FlashMessage').html('<div class="alert alert-danger text-white"><i class="fa fa-exclamation-circle fa-lg float-left " ></i>&nbsp;&nbsp;  ' + data.error + ' <i class="fa fa-times-circle fa-lg float-right" style="cursor:pointer"><i></div>').fadeIn('slow');
+            }
+        },
+    });
+}
+
+function Confirm(title, msg, $true, $false, link = null) { /*change*/
+    var $content = "<div class='dialog-ovelay'>" +
+        "<div class='dialog'><header>" +
+        " <h3> " + title + " </h3> " +
+        "<i class='fa fa-close'></i>" +
+        "</header>" +
+        "<div class='dialog-msg'>" +
+        " <p> " + msg + " </p> <br>" +
+        "<span class='text-danger' id='errorMessage'></span>" +
+        " <input type='text' autocomplete='off' id='confirmPassword'  placeholder='Enter your password to delete' class='form-control'> " +
+        "</div>" +
+        "<footer>" +
+        "<div class='controls'>" +
+        " <button class='button button-danger text-center doAction' data-option=" + link + ">" + $true + "</button> " +
+        " <button class='button button-default text-center cancelAction'>" + $false + "</button> " +
+        "</div>" +
+        "</footer>" +
+        "</div>" +
+        "</div>";
+    $('body').prepend($content);
+
+    $('.doAction').click(function () {
+        if ($('#confirmPassword').val() == '') {
+            return $('#errorMessage').text('please enter password is required');
+        }
+        var global = $(this).attr('data-option');
+
+        if (global != 'bulkDelete') {
+            singleDelete(global)
+        } else {
+            bulkDelete();
+        }
+
+        $(this).parents('.dialog-ovelay').fadeOut(500, function () {
+            $(this).remove();
+        });
+    });
+    $('.cancelAction, .fa-close').click(function () {
+        $(this).parents('.dialog-ovelay').fadeOut(500, function () {
+            $(this).remove();
+        });
+    });
+
+    $('#confirmPassword').on('keyup', function () {
+        if ($(this).val() != '') {
+            $(this).prop("type", "password");
+        } else {
+            $(this).prop("type", "text");
+        }
+    })
+}

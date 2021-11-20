@@ -1,129 +1,28 @@
 @extends('layouts.app')
 
 @section('content')
-{{-- @include('functions.php') --}}
-
-
-
-    {{-- <!-- Small boxes (Stat box) -->
-    <div class="row">
-      <div class="col-lg-3 col-xs-6">
-        <!-- small box -->
-        <div class="small-box bg-green">
-          <div class="inner">
-            <h3>
-                connection
-            </h3>
-
-            <p>Sales Amount</p>
-          </div>
-          <div class="icon">
-            <i class="ion ion-social-usd"></i>
-          </div>
-
-        </div>
+  <div class="row">
+      <div class="col-sm-9">
+        <h3>Invoice List</h3>
       </div>
-      <!-- ./col -->
-      <div class="col-lg-3 col-xs-6">
-        <!-- small box -->
-        <div class="small-box bg-purple">
-          <div class="inner">
-            <h3>70</h3>
-
-            <p>Total Invoices</p>
-          </div>
-          <div class="icon">
-            <i class="ion ion-printer"></i>
-          </div>
-
-        </div>
+      <div class="col-sm-3 pull-right">
+          <a href1="{{ route('invoices.create') }}" class="btn btn-primary btn-sm openCreateModal">Add New Invoice</a>
+          <a href="" class="btn btn-danger btn-sm">PDF</a>
+          <a href="" class="btn btn-success btn-sm">Export</a>
       </div>
-      <!-- ./col -->
-      <div class="col-lg-3 col-xs-6">
-        <!-- small box -->
-        <div class="small-box bg-yellow">
-          <div class="inner">
-          <h3>60</h3>
-
-            <p>Pending Bills</p>
-          </div>
-          <div class="icon">
-            <i class="ion ion-load-a"></i>
-          </div>
-
-        </div>
-      </div>
-      <!-- ./col -->
-      <div class="col-lg-3 col-xs-6">
-        <!-- small box -->
-        <div class="small-box bg-red">
-          <div class="inner">
-          <h3>7</h3>
-
-            <p>Due Amount</p>
-          </div>
-          <div class="icon">
-            <i class="ion ion-alert-circled"></i>
-          </div>
-
-        </div>
-      </div>
-      <!-- ./col -->
-    </div>
-    <!-- /.row -->
-
-
-    <!-- 2nd row -->
-    <div class="row">
-      <div class="col-lg-3 col-xs-6">
-        <!-- small box -->
-        <div class="small-box bg-primary">
-          <div class="inner">
-            <h3>200</h3>
-
-            <p>Total Products</p>
-          </div>
-          <div class="icon">
-            <i class="ion ion-social-dropbox"></i>
-          </div>
-
-        </div>
-      </div>
-
-      <div class="col-lg-3 col-xs-6">
-        <!-- small box -->
-        <div class="small-box bg-maroon">
-          <div class="inner">
-            <h3>100</h3>
-
-            <p>Total Customers</p>
-          </div>
-          <div class="icon">
-            <i class="ion ion-ios-people"></i>
-          </div>
-
-        </div>
-      </div>
-
-      <div class="col-lg-3 col-xs-6">
-        <!-- small box -->
-        <div class="small-box bg-olive">
-          <div class="inner">
-          <h3>4000</h3>
-
-            <p>Paid Bills</p>
-          </div>
-          <div class="icon">
-            <i class="ion ion-ios-paper"></i>
-          </div>
-
-        </div>
-      </div>
-    </div> --}}
-
+  </div>
+  @include('FlashMessage')
+<div class="panel">
+    <div id="ContainerTable" data-url="{{ route('invoices.index') }}">
+       <div class="panel-body">
     @include('invoices.table')
+       </div>
+    </div>
+</div>
 
+<input type="hidden" id="printUrl" data-print-url="{{ route('invoices.show', ['id', 'option' => 'optionvalue']) }}">
 
+@include('invoices.modals')
 
 
 @endsection

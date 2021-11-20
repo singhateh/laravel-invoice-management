@@ -1,13 +1,16 @@
 /*******************************************************************************
-* Md Invoice System                                             *
-*                                                                              *
-* Version: 1.0                                                               *
-* Author: Abhishek Raj                                   				   *
+*  LARAVEL PHP FRAMEWORK  JSS Invoice Management System                                                *
+*                                                                              *                                                               *
+* Version: 1.0                                 				   *
+* Author:  Alagie Singhateh                                   				   *
+* Email:  3939919@gmail.com                                    				   *
+* Website:  https:://www.jambasangsang.com                                    				   *
 *******************************************************************************/
+
 
 body {
   padding: 0;
-  background-color: #00a65a;
+  background-color: #605ca8;
 }
 
 .btn-primary {
@@ -98,13 +101,9 @@ input.shipping {
   width: 100%;
   padding: 10px;
 }
-#invoice_status,
-#invoice_type {
-  margin-top: 23px;
-}
 
 .invoice_product_qty {
-  width: 50px;
+  width: 70px;
   text-align: center;
 }
 .invoice_type {

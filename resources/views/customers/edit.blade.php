@@ -22,11 +22,16 @@
 	<div class="col-xs-12">
 		<div class="panel panel-default">
 			<div class="panel-body form-group form-group-sm">
-				<form method="post" id="create_customer" action="{{ route('customers.store') }}">
+				<form method="post" id="1create_customer" action="{{ route('customers.store') }}">
                     @csrf
 					<input type="hidden" name="action" value="create_customer">
                     <input type="hidden" name="customer_id" value="{{ $customer->id }}">
 					@include('customers.fields')
+					<div class="row">
+						<div class="col-xs-12 margin-top btn-group">
+							<input type="submit" id1="action_create_customer" class="btn btn-success float-right" value="Update Customer" data-loading-text="Creating...">
+						</div>
+					</div>
 				</form>
 			</div>
 		</div>

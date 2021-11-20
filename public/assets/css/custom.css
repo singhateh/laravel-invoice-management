@@ -1,0 +1,228 @@
+/*******************************
+* MODAL AS LEFT/RIGHT SIDEBAR
+* Add "left" or "right" in modal parent div, after class="modal".
+
+*  LARAVEL PHP FRAMEWORK  JSS Invoice Management System                                                *
+*                                                                              *                                                               *
+* Version: 1.0                                 				   *
+* Author:  Alagie Singhateh                                   				   *
+* Email:  3939919@gmail.com                                    				   *
+* Website:  https:://www.jambasangsang.com
+* Phone +62081290348080                                  				   *
+*******************************************************************************/
+
+
+    .modal.left .modal-dialog,
+    .modal.right .modal-dialog {
+        position: fixed;
+        margin: auto;
+        /* min-width: 1370px !important; */
+        min-width: calc(130vh - -520px);
+        max-width: calc(180vh - -600px);
+        /* max-width: 1370px !important; */
+        height: 100%;
+        -webkit-transform: translate3d(0%, 0, 0);
+        -ms-transform: translate3d(0%, 0, 0);
+        -o-transform: translate3d(0%, 0, 0);
+        transform: translate3d(0%, 0, 0);
+    }
+
+    .patientInfo {
+        min-width: calc(110vh - -520px);
+        max-width: calc(150vh - -550px);
+        /* max-width: calc(100vh - -520px); */
+
+    }
+
+    .modal.left .modal-content,
+    .modal.right .modal-content {
+        height: 100%;
+        overflow-y: auto;
+    }
+
+    .modal.left .modal-body,
+    .modal.right .modal-body {
+        padding: 15px 15px 80px;
+    }
+
+    /*Left*/
+    .modal.left.fade .modal-dialog {
+        left: -320px;
+        -webkit-transition: opacity 0.3s linear, left 0.3s ease-out;
+        -moz-transition: opacity 0.3s linear, left 0.3s ease-out;
+        -o-transition: opacity 0.3s linear, left 0.3s ease-out;
+        transition: opacity 0.3s linear, left 0.3s ease-out;
+    }
+
+    .modal.left.fade.in .modal-dialog {
+        left: 0;
+    }
+
+    /*Right*/
+    .modal.right.fade .modal-dialog {
+        right: -320px;
+        -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
+        -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
+        -o-transition: opacity 0.3s linear, right 0.3s ease-out;
+        transition: opacity 0.3s linear, right 0.3s ease-out;
+    }
+
+    .modal.right.fade.in .modal-dialog {
+        right: 0;
+    }
+
+    /* ----- MODAL STYLE ----- */
+    .modal-content {
+        border-radius: 0;
+        border: none;
+    }
+
+    /* ----- v CAN BE DELETED v ----- */
+
+
+
+    /* Scroll Design  */
+
+    #ContainerTable {
+        max-height: calc(100vh - 190px);
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    #ContainerModal {
+        max-height: calc(100vh - 290px);
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+
+    #ContainerTable::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        background-color: #F5F5F5;
+        border-radius: 100px;
+        cursor: pointer;
+    }
+
+    #ContainerTable::-webkit-scrollbar {
+        width: 5px;
+        background-color: #F5F5F5;
+        cursor: pointer;
+    }
+
+    #ContainerTable::-webkit-scrollbar-thumb {
+        background-color: #960cc0;
+        border-radius: 100px;
+        cursor: pointer;
+        background-image: -webkit-linear-gradient(0deg,
+                rgba(255, 255, 255, 0.5) 25%,
+                transparent 25%,
+                transparent 50%,
+                rgba(255, 255, 255, 0.5) 50%,
+                rgba(255, 255, 255, 0.5) 75%,
+                transparent 75%,
+                transparent)
+    }
+
+
+    /* Modal Confirmation Design */
+
+    body {
+        font-family: sans-serif
+    }
+
+    .dialog-ovelay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.50);
+        z-index: 999999
+    }
+
+    .dialog-ovelay .dialog {
+        width: 400px;
+        margin: 100px auto 0;
+        background-color: #fff;
+        box-shadow: 0 0 20px rgba(0, 0, 0, .2);
+        border-radius: 3px;
+        overflow: hidden
+    }
+
+    .dialog-ovelay .dialog header {
+        padding: 10px 8px;
+        background-color: #f6f7f9;
+        border-bottom: 1px solid #e5e5e5
+    }
+
+    .dialog-ovelay .dialog header h3 {
+        font-size: 14px;
+        margin: 0;
+        color: #555;
+        display: inline-block
+    }
+
+    .dialog-ovelay .dialog header .fa-close {
+        float: right;
+        color: #c4c5c7;
+        cursor: pointer;
+        transition: all .5s ease;
+        padding: 0 2px;
+        border-radius: 1px
+    }
+
+    .dialog-ovelay .dialog header .fa-close:hover {
+        color: #b9b9b9
+    }
+
+    .dialog-ovelay .dialog header .fa-close:active {
+        box-shadow: 0 0 5px #673AB7;
+        color: #a2a2a2
+    }
+
+    .dialog-ovelay .dialog .dialog-msg {
+        padding: 12px 10px
+    }
+
+    .dialog-ovelay .dialog .dialog-msg p {
+        margin: 0;
+        font-size: 15px;
+        color: #333
+    }
+
+    .dialog-ovelay .dialog footer {
+        border-top: 1px solid #e5e5e5;
+        padding: 8px 10px
+    }
+
+    .dialog-ovelay .dialog footer .controls {
+        direction: rtl
+    }
+
+    .dialog-ovelay .dialog footer .controls .button {
+        padding: 5px 15px;
+        border-radius: 3px
+    }
+
+    .button {
+        cursor: pointer
+    }
+
+    .button-default {
+        background-color: rgb(248, 248, 248);
+        border: 1px solid rgba(204, 204, 204, 0.5);
+        color: #5D5D5D;
+    }
+
+    .button-danger {
+        background-color: #f44336;
+        border: 1px solid #d32f2f;
+        color: #f5f5f5
+    }
+
+    .link {
+        padding: 5px 10px;
+        cursor: pointer
+    }
+
+
